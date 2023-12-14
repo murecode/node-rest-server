@@ -2,26 +2,26 @@ import { Schema, model } from 'mongoose';
 
 const UserSchema = Schema({
 
-  name: {
+  firstname: {
     type: String,
-    required: [true, 'El nombre es obligatorio']
+    required: [ true, 'El nombre es obligatorio' ]
   },
   email: {
     type: String,
-    required: [true, 'El correo es obligatorio'],
+    required: [ true, 'El correo es obligatorio' ],
     unique: true
   },
   pass: {
     type: String,
-    required: [true, 'La contraseña es obligatoria']
+    required: [ true, 'La contraseña es obligatoria' ]
   },
   img: {
     type: String,
   },
   rol: {
     type: String,
-    required: false,
-    enum: ['ADMIN_ROL', 'USER_ROL', 'CLIENT_ROL' ]
+    required: [ true, 'El rol es requerido' ],
+    enum: [ 'ADMIN', 'USER', 'CLIENT' ]
   },
   estado: {
     type: Boolean,

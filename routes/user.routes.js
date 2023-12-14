@@ -15,11 +15,11 @@ import {
 
 const userRouter = Router();
 
-userRouter.get('/', getUser);
-userRouter.post('/', postUser);
-userRouter.put('/', putUser);
-userRouter.patch('/', patchUser);
-userRouter.delete('/', deleteUser);
+userRouter.get    ('/', getUser);
+userRouter.post   ('/', postUser);
+userRouter.put    ('/:id', putUser);
+userRouter.patch  ('/:id', patchUser);
+userRouter.delete ('/:id', deleteUser);
 
 // userRouter.post('/', [
   // check('name', 'El nombre es requerido').not().isEmpty(),

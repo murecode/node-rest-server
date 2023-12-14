@@ -1,8 +1,9 @@
 import { response, request } from 'express';
 import crypt from 'bcryptjs';
+import { User } from '../model/user.js';
+// import { body } from 'express-validator';
 
-// import User from '../model/user.js';
-
+const UserModel = User;
 
 export const getUser = async (req = request, res = response) => {
 
@@ -19,9 +20,6 @@ export const getUser = async (req = request, res = response) => {
   // );
 
   res.json({
-
-    msg: 'GET - controller'
-
     // total_usuarios,
     // usuarios,
   });
@@ -31,10 +29,11 @@ export const getUser = async (req = request, res = response) => {
 export const postUser = async (req, res = response) => {
 
   // Cuerpo de la respuesta, traemos lo que necesitamos del objeto por desestructuración
-  // const { name, email, pass, rol } = req.body;
+  const body = req.body;
 
-  // Instancia del Modelo indicando sus propiedades 
-  // const usuario = new User({name, email, pass, rol});
+  // Instancia del Modelo indicando sus props a usar 
+  const usuario = new UserModel( body );
+  await usuario.save();
 
   //--Para realizar una encriptacion debemos seguir los siguientes pasos
   //--1) Validar si existe usuario en la base de datos
@@ -48,14 +47,14 @@ export const postUser = async (req, res = response) => {
   // await usuario.save();
 
   res.json({
-    msg: "POST - controller",
-    // usuario
+    usuario
   });
 
 };
 
 export const putUser = async (req, res = response) => {
-  // const { id } = req.params;
+
+  const { id } = req.params
   // const { pass, google, email, ...rest } = req.body
 
   // if (pass) {
@@ -67,7 +66,7 @@ export const putUser = async (req, res = response) => {
   // res.json(user);
 
   res.json({
-    msg: "PUT - controller",
+    id
   });
 
 };

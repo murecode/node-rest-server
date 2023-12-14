@@ -40,11 +40,11 @@ export default class Server {
   //Middlewares globales
   middlewares() {
     //Acceso a Directorio publico
-    this.app.use( express.static('public'));
+    this.app.use( express.static('public') );
     //CORS
-    this.app.use(cors());
+    this.app.use( cors() );
     //Leer y Serializar a formato json respuestas del servidor
-    this.app.use(express.json());
+    this.app.use( express.json() );
   }
 
   listenPort() {
