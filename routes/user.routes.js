@@ -1,6 +1,8 @@
 
-import Router from 'express';
-// import check from 'express-validator';
+import { Router } from 'express';
+import { check } from 'express-validator';
+import validateFields from '../middlewares/validate-fields.js';
+import { validateEmail, validateRol, validateUserId } from '../helpers/db-validators.js';
 
 import {
   getUser,
@@ -16,24 +18,25 @@ import {
 const userRouter = Router();
 
 userRouter.get    ('/', getUser);
-userRouter.post   ('/', postUser);
-userRouter.put    ('/:id', putUser);
+// userRouter.get    ('/:id', postUser);
+// userRouter.put    ('/:id', putUser);
 userRouter.patch  ('/:id', patchUser);
 userRouter.delete ('/:id', deleteUser);
 
-// userRouter.post('/', [
-  // check('name', 'El nombre es requerido').not().isEmpty(),
-  // check('pass', 'Contraseña debe tener más de 8 caracteres').isLength({min:8}),
-  // check('email').custom(validarEmail),
-  // check('rol').custom(validarRol),
-  // validarCampos
-// ], postUser);
+userRouter.post('/', [
+  check('firstname', 'El nombre es requerido').not().isEmpty(),
+  check('email').custom( validateEmail ),
+  check('password', 'Contraseña debe tener más de 6 caracteres').isLength({min:6}),
+  check('rol').custom( validateRol ),
+  validateFields
+], postUser);
 
-// userRouter.put('/:id', [
-//   check('id', "No es un id valido").isMongoId(),
-//   check('id').custom(validarUserId),
-//   validarCampos
-// ], putUser);
+userRouter.put('/:id', [
+  check('id', "No es un id valido").isMongoId(),
+  check('id', 'El id no existe').custom( validateUserId ),
+  check('rol').custom( validateRol ),
+  validateFields
+], putUser);
 
 // userRouter.patch('/:id', [
   

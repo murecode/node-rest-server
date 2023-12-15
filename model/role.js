@@ -4,7 +4,7 @@ const RoleSchema = Schema({
 
   rol: {
     type: String,
-    required: [true, 'requerido']
+    required: [ true, 'El rol es obligatorio' ]
   }
 
 });

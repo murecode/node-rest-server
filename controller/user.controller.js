@@ -1,7 +1,7 @@
 import { response, request } from 'express';
-import crypt from 'bcryptjs';
+import bcryptjs from "bcryptjs";
 import { User } from '../model/user.js';
-// import { body } from 'express-validator';
+// import body from 'express-validator';
 
 const UserModel = User;
 
@@ -29,22 +29,19 @@ export const getUser = async (req = request, res = response) => {
 export const postUser = async (req, res = response) => {
 
   // Cuerpo de la respuesta, traemos lo que necesitamos del objeto por desestructuración
-  const body = req.body;
-
+  const { firstname, email, password, rol } = req.body;
   // Instancia del Modelo indicando sus props a usar 
-  const usuario = new UserModel( body );
-  await usuario.save();
-
+  const usuario = new UserModel({ firstname, email, password, rol });
+  
   //--Para realizar una encriptacion debemos seguir los siguientes pasos
   //--1) Validar si existe usuario en la base de datos
   
-
   //--2) Encriptar la contraseña
-  // const salt = crypt.genSaltSync();
-  // usuario.pass = crypt.hashSync(pass, salt);
-
+  const salt = bcryptjs.genSaltSync();  //Nivel de encriptacion de password por defecto 10
+  usuario.password = bcryptjs.hashSync( password, salt );
+  
   //--3) Grabar en la DB
-  // await usuario.save();
+  await usuario.save();
 
   res.json({
     usuario
@@ -54,16 +51,16 @@ export const postUser = async (req, res = response) => {
 
 export const putUser = async (req, res = response) => {
 
-  const { id } = req.params
-  // const { pass, google, email, ...rest } = req.body
+  const { id } = req.params;
+  const { _id, password, google, email, ...resto } = req.body;
 
-  // if (pass) {
-  //   const salt = crypt.genSaltSync();
-  //   rest.pass = crypt.hashSync(pass, salt);
-  // };
+  if ( password ) {
+    const salt = bcryptjs.genSaltSync();
+    resto.password = bcryptjs.hashSync( password, salt );
+  };
 
-  // const user = await Usuario.findByIdAndUpdate(id, rest)
-  // res.json(user);
+  const usuario = await UserModel.findByIdAndUpdate( id, resto );
+  res.json( usuario );
 
   res.json({
     id

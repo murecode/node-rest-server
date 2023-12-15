@@ -11,7 +11,7 @@ const UserSchema = Schema({
     required: [ true, 'El correo es obligatorio' ],
     unique: true
   },
-  pass: {
+  password: {
     type: String,
     required: [ true, 'La contraseña es obligatoria' ]
   },
@@ -34,10 +34,10 @@ const UserSchema = Schema({
 
 });
 
-
+// Oculta campos del cuerpo de la respuesta JSON
 UserSchema.methods.toJSON = function() {
-  const { __v, pass, rol, ...usuario } = this.toObject();
-  return usuario
-};
+  const { __v, password, rol, ...user } = this.toObject();
+  return user
+}
 
 export const User = model('User', UserSchema);
