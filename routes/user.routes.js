@@ -17,11 +17,7 @@ import {
 
 const userRouter = Router();
 
-userRouter.get    ('/', getUser);
-// userRouter.get    ('/:id', postUser);
-// userRouter.put    ('/:id', putUser);
-userRouter.patch  ('/:id', patchUser);
-userRouter.delete ('/:id', deleteUser);
+userRouter.get('/', getUser);
 
 userRouter.post('/', [
   check('firstname', 'El nombre es requerido').not().isEmpty(),
@@ -38,15 +34,15 @@ userRouter.put('/:id', [
   validateFields
 ], putUser);
 
-// userRouter.patch('/:id', [
-  
-// ],patchUser)
+userRouter.delete('/:id', [
+  check('id', 'No es un id valido').isMongoId(),
+  check('id').custom( validateUserId ),
+  validateFields
+], deleteUser);
 
-// userRouter.delete('/:id', [
-  // check('id', 'No es un id valido').isMongoId(),
-  // check('id').custom(validarUserId),
-  // validarCampos
-// ], deleteUser);
+userRouter.patch('/:id', [
+  
+],patchUser)
 
 export default userRouter;
 

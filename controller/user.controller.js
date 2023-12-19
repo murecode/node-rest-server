@@ -7,46 +7,45 @@ const UserModel = User;
 
 export const getUser = async (req = request, res = response) => {
 
-  // const { limit = 5, from = 0 } = req.query;
-  // const query_condition = {estado: true}
+  const { limit = 5, from = 0 } = req.query; //Paginación
+  const query_condition = { estado: true };  //*
 
-  // const [ total_usuarios, usuarios ] = await Promise.all(
-  //   [ 
-  //     User.countDocuments(query_condition),
-  //     User.find(query_condition)
-  //     .skip(Number(from))
-  //     .limit(Number(limit))
-  //   ]
-  // );
+  const [ usuarios, total ] = await Promise.all(  //**
+    [ 
+      UserModel.find( query_condition ) // search records
+      .skip( Number(from) ) // skip records from
+      .limit( Number(limit) ), // search records until
+      UserModel.countDocuments( query_condition ) //records counting
+    ]
+  );
 
   res.json({
-    // total_usuarios,
-    // usuarios,
+    usuarios, total
   });
 
+  //* Se establece una condicion para hacer visible los registros que la cumplen
+  //** Desestructuracion de arreglo para establecer un orden en la representacion del JSON
 };
 
 export const postUser = async (req, res = response) => {
 
-  // Cuerpo de la respuesta, traemos lo que necesitamos del objeto por desestructuración
-  const { firstname, email, password, rol } = req.body;
-  // Instancia del Modelo indicando sus props a usar 
-  const usuario = new UserModel({ firstname, email, password, rol });
+  const { firstname, email, password, rol } = req.body; //*
+  const usuario = new UserModel({ firstname, email, password, rol }); //Instancia del schema
   
-  //--Para realizar una encriptacion debemos seguir los siguientes pasos
-  //--1) Validar si existe usuario en la base de datos
+  //Encriptar la contraseña
+  const salt = bcryptjs.genSaltSync();  //**
+  usuario.password = bcryptjs.hashSync( password, salt ); //***
   
-  //--2) Encriptar la contraseña
-  const salt = bcryptjs.genSaltSync();  //Nivel de encriptacion de password por defecto 10
-  usuario.password = bcryptjs.hashSync( password, salt );
-  
-  //--3) Grabar en la DB
+  //Grabar en la DB
   await usuario.save();
 
   res.json({
     usuario
   });
 
+  //* desestructuración del cuerpo de la respuesta, traemos solo los campos necesarios del objeto 
+  //** Nivel de encriptacion de password por defecto 10
+  //*** Se hashea la contraseña junto con un salt para aumentar la seguridad
 };
 
 export const putUser = async (req, res = response) => {
@@ -81,15 +80,18 @@ export const patchUser = (req, res = response) => {
 
 export const deleteUser = async (req, res = response) => {
 
-  // const { id } = req.params;
-  
-  //Esta linea Elimina fisicamente de la DB - No es recomendable
-  // const user = await Usuario.findByIdAndDelete(id);
+  const { id } = req.params;
 
-  //Esta linea "oculta" al usuario de la DB por lo que no puede ser accedido pero aun existe
-  // const user = await User.findByIdAndUpdate(id, {estado: false});
+  // const usuario = await UsuarioModel.findByIdAndDelete( id ); //*
+
+  const usuario = await UserModel.findByIdAndUpdate( id, {estado: false} ); //**
 
   res.json({
-    msg: "DELETE - Controller"
+    usuario
   })
+
+  //* Elimina fisicamente de la DB - No recomendo por la integridad referencial.
+  //** Oculta el registro de la DB segun una condicion...
+  //...Recomendado ya que no puede ser accedido pero aun existe "Soft Deleted".
+
 };
