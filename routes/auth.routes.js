@@ -1,10 +1,12 @@
-// import { Router } from 'express';
-// import { check } from 'express-validator';
+import { Router } from 'express';
+import { check } from 'express-validator';
 
-// const express = require('express');
+const authRouter = Router();
 
-// import { login } from '../controller/auth.controller';
+import { login } from "../controller/auth.controller.js";
 
-// export const authRouter = express.Router();
+authRouter.post('/login',[
 
-// authRouter.post('/login', login);
+],login);
+
+export default authRouter;

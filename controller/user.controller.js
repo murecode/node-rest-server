@@ -24,7 +24,7 @@ export const getUser = async (req = request, res = response) => {
   });
 
   //* Se establece una condicion para hacer visible los registros que la cumplen
-  //** Desestructuracion de arreglo para establecer un orden en la representacion del JSON
+  //** Desestructuracion de arreglo para establecer un cuerpo para la representacion del recurso
 };
 
 export const postUser = async (req, res = response) => {

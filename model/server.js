@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 
 import userRouter from '../routes/user.routes.js';
+import authRouter from '../routes/auth.routes.js';
 import dbConn from '../db/db-config.js';
-// import { authRouter } from '../routes/auth.routes.js';
 
 export default class Server {
 
@@ -11,7 +11,7 @@ export default class Server {
     this.app = express();
     this.port = process.env.PORT;
     this.usersPath = '/api/users';
-    // this.authPath = '/auth';
+    this.authPath = '/api/auth';
 
     this.paths = {
       // categories: '/restapi/categories'
@@ -28,9 +28,9 @@ export default class Server {
   }
 
   routes() {
-    // this.app.use(authRouter(this.authPath));
-    // this.app.use(userRouter(this.user));
     this.app.use(this.usersPath, userRouter);
+    this.app.use(this.authPath, authRouter);
+    // this.app.use(userRouter(this.user));
   }
 
   async dbConnection() {
